@@ -11,7 +11,7 @@ DEFAULT MOD
 ]]--
 
 -- register dig particles for default nodes
-particles.register_dig_particle("default:bookshelf","default_wood")
+particles.register_dig_particle("default:bookshelf","default_book",{visual="sprite",textures={"default_book.png"}})
 particles.register_dig_particle("default:brick","default_brick")
 particles.register_dig_particle("default:cactus","default_cactus")
 particles.register_dig_particle("default:chest","default_wood")
