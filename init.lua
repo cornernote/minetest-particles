@@ -77,7 +77,7 @@ minetest.register_abm({
 	interval = 1,
 	chance = 5,
 	action = function(pos)
-		minetest.env:add_entity({x=pos.x,y=pos.y,z=pos.z}, "particles:signalbubble")
+		minetest.env:add_entity({x=pos.x+math.random()*0.5,y=pos.y,z=pos.z+math.random()*0.5}, "particles:signalbubble")
 	end,
 })
 
