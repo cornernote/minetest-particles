@@ -28,7 +28,9 @@ Modders Guide
 ----------------------------------
 
 
-If you want particles in your mod then simply add this line:
+Dig Particles:
+
+Add this line to your mod:
 
 particles.register_dig_particle(node,texture,[params])
 - node = the name of the node (your_mod:your_node)
@@ -38,6 +40,17 @@ particles.register_dig_particle(node,texture,[params])
 EG:
 create particles of wood after digging a bookshelf:
 particles.register_dig_particle("default:bookshelf","default_wood")
+
+
+Smoke Particles and Signal Bubbles:
+
+Add smokes=1 or signalbubbles=1 to the groups in the node definition.
+
+EG:
+minetest.register_node("your_mod:your_item", {
+	description = "Your Item",
+	groups = {smokes=1},
+})
 
 
 

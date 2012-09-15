@@ -13,48 +13,73 @@ MAIN LOADER
 -- load api
 dofile(minetest.get_modpath("particles").."/api.lua")
 
--- register dig particles for default nodes
-particles.register_dig_particle("default:bookshelf","default_wood")
-particles.register_dig_particle("default:brick","default_brick")
-particles.register_dig_particle("default:cactus","default_cactus")
-particles.register_dig_particle("default:chest","default_wood")
-particles.register_dig_particle("default:chest_locked","default_wood")
-particles.register_dig_particle("default:clay","default_clay")
-particles.register_dig_particle("default:cobble","default_cobble")
-particles.register_dig_particle("default:desert_sand","default_desert_sand")
-particles.register_dig_particle("default:desert_stone","default_desert_stone")
-particles.register_dig_particle("default:dirt","default_dirt")
-particles.register_dig_particle("default:dirt_with_grass","default_dirt")
-particles.register_dig_particle("default:dirt_with_grass_footsteps","default_dirt")
-particles.register_dig_particle("default:dry_shrub","default_dirt")
-particles.register_dig_particle("default:fence_wood","default_wood")
-particles.register_dig_particle("default:furnace","default_cobble")
-particles.register_dig_particle("default:glass","default_glass")
-particles.register_dig_particle("default:gravel","default_gravel")
-particles.register_dig_particle("default:junglegrass","default_dirt")
-particles.register_dig_particle("default:jungletree","default_jungletree")
-particles.register_dig_particle("default:ladder","default_wood")
-particles.register_dig_particle("default:leaves","default_leaves")
-particles.register_dig_particle("default:mese","default_mese")
-particles.register_dig_particle("default:mossycobble","default_mossycobble")
-particles.register_dig_particle("default:papyrus","default_papyrus")
-particles.register_dig_particle("default:rail","default_rail")
-particles.register_dig_particle("default:sand","default_sand")
-particles.register_dig_particle("default:sandstone","default_sandstone")
-particles.register_dig_particle("default:sapling","default_dirt")
-particles.register_dig_particle("default:sign_wall","default_wood")
-particles.register_dig_particle("default:steelblock","default_steelblock")
-particles.register_dig_particle("default:stone","default_stone")
-particles.register_dig_particle("default:stone_with_coal","default_stone")
-particles.register_dig_particle("default:stone_with_iron","default_stone")
-particles.register_dig_particle("default:torch","default_wood")
-particles.register_dig_particle("default:tree","default_tree")
-particles.register_dig_particle("default:wood","default_wood")
+-- register register files for mods
+dofile(minetest.get_modpath("particles").."/mod_default.lua")
+if minetest.get_modpath("mesecons") ~= nil then
+	dofile(minetest.get_modpath("particles").."/mod_mesecons.lua")
+end
 
 -- register_on_dignode
 minetest.register_on_dignode(function(pos, oldnode, digger)
 	particles.on_dignode(pos, oldnode, digger)
 end)
+
+-- register smoke particle
+minetest.register_entity("particles:smoke", {
+    physical = true,
+	visual_size = {x=0.25, y=0.25},
+	collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01},
+    visual = "sprite",
+    textures = {"smoke_puff.png"},
+    on_step = function(self, dtime)
+        self.object:setacceleration({x=0, y=0.5, z=0})
+        self.timer = self.timer + dtime
+        if self.timer > 3 then
+            self.object:remove()
+        end
+    end,
+    timer = 0,
+})
+
+-- register smoke abm
+minetest.register_abm({
+	nodenames = {"group:smokes","default:torch"},
+	interval = 5,
+	chance = 5,
+	action = function(pos)
+		minetest.env:add_entity({x=pos.x+math.random()*0.5,y=pos.y+0.75,z=pos.z+math.random()*0.5}, "particles:smoke")
+	end,
+})
+
+-- register signalbubble
+minetest.register_entity("particles:signalbubble", {
+	physical = true,
+	visual_size = {x=0.10, y=0.10},
+	collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01},
+	visual = "sprite",
+	textures = {"particles_signalbubble.png"},
+	timer = 0,
+	lifetime = 4,
+	on_step = function(self, dtime)
+		self.timer = self.timer + dtime
+		if self.timer > self.lifetime then
+			self.object:remove()
+		end
+	end,
+	on_activate = function(self, staticdata)
+		self.object:setacceleration({x=0, y=0.05, z=0})
+	end,
+})
+
+-- register signalbubble abm
+minetest.register_abm({
+	nodenames = {"group:signalbubbles","mesecons:mesecon_on","mesecons:wall_lever_on","mesecons:mesecon_torch_on"},
+	interval = 1,
+	chance = 5,
+	action = function(pos)
+		minetest.env:add_entity({x=pos.x,y=pos.y,z=pos.z}, "particles:signalbubble")
+	end,
+})
 
 -- log that we started
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded from "..minetest.get_modpath(minetest.get_current_modname()))
