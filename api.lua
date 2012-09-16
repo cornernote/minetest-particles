@@ -14,7 +14,7 @@ API
 particles = {}
 
 -- dig_particles
-particles.dig_particles = 12
+particles.dig_particles = 64
 
 -- registered_dig_particles
 particles.registered_dig_particles = {nodes={},textures={}}
@@ -29,22 +29,32 @@ particles.register_dig_particle = function(node,texture,params)
 	local entity = {}
 	entity.visual = "cube"
 	entity.physical = true
-	entity.collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01}
+	entity.collisionbox = {-0.05,-0.05,-0.05,0.05,0.05,0.05}
 	entity.textures = {texture..".png",texture..".png",texture..".png",texture..".png",texture..".png",texture..".png"}
 	for i=1,particles.dig_particles do
-		local size = math.random(11,17)/100
+		local size = math.random(5,9)/100
 		entity.visual_size = {x=size, y=size}
-		entity.timer = math.random(100,150)/100
-		entity.bounce = math.random(40,60)/100
+		entity.timer = math.random(200,250)/100
+		entity.lastpos = nil
+		entity.bounced = 0
 		entity.on_step = function(self, dtime)
 			self.timer = self.timer - dtime
 			if self.timer < 0 then
 				self.object:remove()
 			end
-			if self.timer < self.bounce then
-				self.bounce = 0
-				self.object:setvelocity({x=math.random()/10,y=math.random()+1,z=math.random()/10})
+			local pos = self.object:getpos()
+			if self.bounced < 2 and self.lastpos and self.lastpos.y == pos.y then
+				if self.bounced==2 then
+					self.object:remove()
+				elseif self.bounced==1 then
+					self.object:setvelocity({x=0,y=math.random()+1,z=0})
+				else
+					local vel = self.object:getvelocity()
+					self.object:setvelocity({x=vel.x/2,y=math.random(),z=vel.z/2})
+				end
+				self.bounced = self.bounced+1
 			end
+			self.lastpos = pos
 		end
 		entity.on_activate = function(self, staticdata)
 			self.object:setacceleration({x=0, y=-7-(math.random()*2), z=0})
@@ -71,7 +81,7 @@ particles.on_dignode = function(pos, oldnode, digger)
 		}
 		location.vel = {
 			x = math.random(-300,300)/100,
-			y = math.random()*4,
+			y = math.random(100,500)/100,
 			z = math.random(-300,300)/100
 		}
 		node = "particles:"..particles.registered_dig_particles.nodes[oldnode.name]..i

@@ -28,7 +28,7 @@ end)
 minetest.register_entity("particles:smoke", {
     physical = true,
 	visual_size = {x=0.25, y=0.25},
-	collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01},
+	collisionbox = {-0.05,-0.05,-0.05,0.05,0.05,0.05},
     visual = "sprite",
     textures = {"smoke_puff.png"},
     on_step = function(self, dtime)
@@ -55,7 +55,7 @@ minetest.register_abm({
 minetest.register_entity("particles:signalbubble", {
 	physical = true,
 	visual_size = {x=0.10, y=0.10},
-	collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01},
+	collisionbox = {-0.05,-0.05,-0.05,0.05,0.05,0.05},
 	visual = "sprite",
 	textures = {"particles_signalbubble.png"},
 	timer = 0,
