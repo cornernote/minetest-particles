@@ -14,7 +14,7 @@ API
 particles = {}
 
 -- dig_particles
-particles.dig_particles = 8
+particles.dig_particles = 12
 
 -- registered_dig_particles
 particles.registered_dig_particles = {nodes={},textures={}}
@@ -35,7 +35,7 @@ particles.register_dig_particle = function(node,texture,params)
 		local size = math.random(11,17)/100
 		entity.visual_size = {x=size, y=size}
 		entity.timer = math.random(100,150)/100
-		entity.bounce = math.random(50,70)/100
+		entity.bounce = math.random(40,60)/100
 		entity.on_step = function(self, dtime)
 			self.timer = self.timer - dtime
 			if self.timer < 0 then
@@ -70,9 +70,9 @@ particles.on_dignode = function(pos, oldnode, digger)
 			z = pos.z+1-(math.random()*1.5)
 		}
 		location.vel = {
-			x = math.random(-100,100)/100,
-			y = math.random()*2,
-			z = math.random(-100,100)/100
+			x = math.random(-300,300)/100,
+			y = math.random()*4,
+			z = math.random(-300,300)/100
 		}
 		node = "particles:"..particles.registered_dig_particles.nodes[oldnode.name]..i
 		e = minetest.env:add_entity(location.pos, node)
