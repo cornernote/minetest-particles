@@ -13,12 +13,6 @@ MAIN LOADER
 -- load api
 dofile(minetest.get_modpath("particles").."/api.lua")
 
--- register register files for mods
-dofile(minetest.get_modpath("particles").."/mod_default.lua")
-if minetest.get_modpath("mesecons") ~= nil then
-	dofile(minetest.get_modpath("particles").."/mod_mesecons.lua")
-end
-
 -- register_on_dignode
 minetest.register_on_dignode(function(pos, oldnode, digger)
 	particles.on_dignode(pos, oldnode, digger)
@@ -80,6 +74,3 @@ minetest.register_abm({
 		minetest.env:add_entity({x=pos.x+math.random()*0.5,y=pos.y,z=pos.z+math.random()*0.5}, "particles:signalbubble")
 	end,
 })
-
--- log that we started
-minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded from "..minetest.get_modpath(minetest.get_current_modname()))
