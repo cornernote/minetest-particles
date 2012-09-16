@@ -27,13 +27,13 @@ particles.register_dig_particle = function(node,texture,params)
 	end
 	particles.registered_dig_particles.textures[texture] = true
 	local entity = {}
-	local size = math.random(9,17)/100
-	entity.visual_size = {x=size, y=size}
 	entity.visual = "cube"
 	entity.physical = true
 	entity.collisionbox = {-0.01,-0.01,-0.01,0.01,0.01,0.01}
 	entity.textures = {texture..".png",texture..".png",texture..".png",texture..".png",texture..".png",texture..".png"}
 	for i=1,particles.dig_particles do
+		local size = math.random(11,17)/100
+		entity.visual_size = {x=size, y=size}
 		entity.timer = math.random(100,150)/100
 		entity.bounce = math.random(50,70)/100
 		entity.on_step = function(self, dtime)
@@ -77,5 +77,6 @@ particles.on_dignode = function(pos, oldnode, digger)
 		node = "particles:"..particles.registered_dig_particles.nodes[oldnode.name]..i
 		e = minetest.env:add_entity(location.pos, node)
 		e:setvelocity(location.vel)
+		e:setyaw(math.rad(math.random(1,360)))
 	end
 end
