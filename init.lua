@@ -160,3 +160,6 @@ minetest.register_abm({
 		minetest.env:add_entity({x=pos.x+math.random()*0.5,y=pos.y,z=pos.z+math.random()*0.5}, "particles:signalbubble")
 	end,
 })
+
+-- log that we started
+minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded from "..minetest.get_modpath(minetest.get_current_modname()))
