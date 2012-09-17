@@ -14,79 +14,99 @@ API
 particles = {}
 
 -- dig_particles
-particles.dig_particles = 64
+particles.dig_particles = 32
 
--- registered_dig_particles
-particles.registered_dig_particles = {nodes={},textures={}}
-
--- register_dig_particle
-particles.register_dig_particle = function(node,texture,params)
-	particles.registered_dig_particles.nodes[node] = texture
-	if particles.registered_dig_particles.textures[texture] ~= nil then
-		return
-	end
-	particles.registered_dig_particles.textures[texture] = true
-	local entity = {}
-	entity.visual = "cube"
-	entity.physical = true
-	entity.collisionbox = {-0.05,-0.05,-0.05,0.05,0.05,0.05}
-	entity.textures = {texture..".png",texture..".png",texture..".png",texture..".png",texture..".png",texture..".png"}
-	for i=1,particles.dig_particles do
-		local size = math.random(5,9)/100
-		entity.visual_size = {x=size, y=size}
-		entity.timer = math.random(200,250)/100
-		entity.lastpos = nil
-		entity.bounced = 0
-		entity.on_step = function(self, dtime)
-			self.timer = self.timer - dtime
-			if self.timer < 0 then
-				self.object:remove()
+-- register entity
+minetest.register_entity("particles:particle", {
+	physical = true,
+	collisionbox = {-0.05,-0.05,-0.05,0.05,0.05,0.05},
+	timer = 0,
+	timer2 = 0,
+	
+	on_activate = function(self, staticdata)
+		-- Let the entity move random-ish arround
+		local obj = self.object
+		obj:setacceleration({x=0, y=-5, z=0})
+		obj:setvelocity({x=(math.random(0,60)-30)/30, y=(math.random(0,60))/30, z=(math.random(0,60)-30)/30})
+		obj:setyaw(math.random(0,359)/180*math.pi)
+		self.timer = math.random(0, 6)/3
+	end,
+	
+	on_step = function(self, dtime)
+		-- stop "sliding" on the ground
+		self.timer2 = self.timer2+dtime
+		if self.timer2 >= 0.5 then
+			if self.object:getvelocity().y == 0 then
+				self.object:setvelocity({x=0, y=0, z=0})
 			end
-			local pos = self.object:getpos()
-			if self.bounced < 2 and self.lastpos and self.lastpos.y == pos.y then
-				if self.bounced==2 then
-					self.object:remove()
-				elseif self.bounced==1 then
-					self.object:setvelocity({x=0,y=math.random()+1,z=0})
-				else
-					local vel = self.object:getvelocity()
-					self.object:setvelocity({x=vel.x/2,y=math.random(),z=vel.z/2})
-				end
-				self.bounced = self.bounced+1
-			end
-			self.lastpos = pos
+			self.timer2 = 0
 		end
-		entity.on_activate = function(self, staticdata)
-			self.object:setacceleration({x=0, y=-7-(math.random()*2), z=0})
+		
+		-- remove after ~3 seconds
+		self.timer = self.timer+dtime
+		if self.timer >= 3 then
+			self.object:remove()
 		end
-		if params~=nil then for k,v in pairs(params) do
-			entity[k]=v
-		end end
-		minetest.register_entity("particles:"..texture..i, entity)
-	end
-end
+	end,
+})
 
 -- on_dignode
 particles.on_dignode = function(pos, oldnode, digger)
-	if not particles.registered_dig_particles.nodes[oldnode.name] then
+	local node = minetest.registered_nodes[oldnode.name]
+	-- if the no_particles group is set dont add particles
+	if node.groups.no_particles then
 		return
 	end
-	local location = {}
-	local node = ""
+	-- try to get the textures from the dig_result instead of the digged node
+	local tmp = minetest.get_node_drops(oldnode.name, digger:get_wielded_item():get_name())
+	if type(tmp) == "string" then
+		node = minetest.registered_nodes[tmp]
+	elseif type(tmp) == "table" and tmp[1] and tmp[1].get_name then
+		node = minetest.registered_nodes[tmp[1]:get_name()]
+	end
+	-- if dig result is an item
+	if node == nil then
+		node = minetest.registered_nodes[oldnode.name]
+		-- prevent unwanted effects
+		if node == nil then
+			return
+		end
+	end
 	for i=1,particles.dig_particles do
-		location.pos = {
-			x = pos.x+1-(math.random()*1.5),
-			y = pos.y+math.random()/2,
-			z = pos.z+1-(math.random()*1.5)
-		}
-		location.vel = {
-			x = math.random(-300,300)/100,
-			y = math.random(100,500)/100,
-			z = math.random(-300,300)/100
-		}
-		node = "particles:"..particles.registered_dig_particles.nodes[oldnode.name]..i
-		e = minetest.env:add_entity(location.pos, node)
-		e:setvelocity(location.vel)
-		e:setyaw(math.rad(math.random(1,360)))
+		local dx = (math.random(0,10)-5)/10
+		local dy = (math.random(0,10)-5)/10
+		local dz = (math.random(0,10)-5)/10
+		
+		-- spawn at random position in the node
+		local obj = minetest.env:add_entity({x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}, "particles:particle")
+		
+		-- set the textures
+		local textures = {}
+		local max = 1
+		for i=1,6 do
+			if node.tiles then
+				if node.tiles[i] then
+					max = i
+					textures[i] = node.tiles[i]
+				else
+					textures[i] = node.tiles[max]
+				end
+			else -- its a item
+				textures[i] = node.inventory_image
+			end
+		end
+		-- set size
+		local vis_size= math.random(5,15)/100
+		-- set drawtype
+		local vis = "cube"
+		-- make it upright_sprite if the drawtype of the node is not nodelike
+		if node.drawtype and node.drawtype ~= "normal" then
+			vis = "upright_sprite"
+		end
+		obj:set_properties({
+			textures = textures,
+			visual_size = {x=vis_size, y=vis_size},
+			visual = vis,
+		})
 	end
 end
