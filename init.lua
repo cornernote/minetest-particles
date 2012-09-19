@@ -45,6 +45,9 @@ minetest.register_entity("particles:particle", {
 -- register_on_dignode
 minetest.register_on_dignode(function(pos, oldnode, digger)
 	local node = minetest.registered_nodes[oldnode.name]
+	if node == nil then
+		return
+	end
 	-- if the no_particles group is set dont add particles
 	if node.groups.no_particles then
 		return
