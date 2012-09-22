@@ -16,9 +16,7 @@ You should have received a copy of the GNU General Public License along with thi
 Description
 ----------------------------------
 
-Creates 3D textured particles after digging nodes. 
-
-The particles scatter in random directions and bounce a little when they hit the ground.
+Creates 3D textured particles that scatter in random directions after digging nodes. 
 
 
 ----------------------------------
