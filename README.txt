@@ -25,19 +25,15 @@ The particles scatter in random directions and bounce a little when they hit the
 Modders Guide
 ----------------------------------
 
-Dig Particles:
+No Dig Particles:
 
-Add this line to your mod:
-
-particles.register_dig_particle(node,texture,[params])
-- node = the name of the node (your_mod:your_node)
-- texture = a png file without the .png extension
-- params = (optional) additional params that will be added to the entity table
+Add no_particles=1 to the groups in the node definition.
 
 EG:
-create particles of wood after digging a bookshelf:
-particles.register_dig_particle("default:bookshelf","default_wood")
-
+minetest.register_node("your_mod:your_item", {
+	description = "Your Item",
+	groups = {no_particles=1},
+})
 
 Smoke Particles and Signal Bubbles:
 
