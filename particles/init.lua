@@ -19,6 +19,7 @@ minetest.register_entity("particles:particle", {
 	timer2 = 0,
 	on_activate = function(self, staticdata)
 		-- Let the entity move random-ish arround
+		math.randomseed(os.time())
 		local obj = self.object
 		obj:setacceleration({x=0, y=-5, z=0})
 		obj:setvelocity({x=(math.random(0,60)-30)/30, y=(math.random(0,60))/30, z=(math.random(0,60)-30)/30})
@@ -65,6 +66,7 @@ minetest.register_on_dignode(function(pos, oldnode, digger)
 		end
 	end
 	-- create this many particles
+	math.randomseed(os.time())
 	for i=1,32 do
 		local dx = (math.random(0,10)-5)/10
 		local dy = (math.random(0,10)-5)/10
@@ -123,6 +125,7 @@ minetest.register_entity("particles:smoke", {
 
 -- register smoke abm
 minetest.register_abm({
+	math.randomseed(os.time())
 	nodenames = {"group:smokes","default:torch"},
 	interval = 5,
 	chance = 5,
@@ -153,6 +156,7 @@ minetest.register_entity("particles:signalbubble", {
 
 -- register signalbubble abm
 minetest.register_abm({
+	math.randomseed(os.time())
 	nodenames = {"group:signalbubbles","mesecons:mesecon_on","mesecons:wall_lever_on","mesecons:mesecon_torch_on"},
 	interval = 1,
 	chance = 5,
