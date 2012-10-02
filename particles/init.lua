@@ -50,8 +50,9 @@ minetest.register_on_dignode(function(pos, oldnode, digger)
 		return
 	end
 	-- try to get the textures from the dig_result instead of the digged node
+	local tmp
 	if digger ~= nil then
-		local tmp = minetest.get_node_drops(oldnode.name, digger:get_wielded_item():get_name())
+		tmp = minetest.get_node_drops(oldnode.name, digger:get_wielded_item():get_name())
 	end
 	if type(tmp) == "string" then
 		node = minetest.registered_nodes[tmp]
