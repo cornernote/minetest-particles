@@ -46,7 +46,7 @@ minetest.register_entity("particles:particle", {
 minetest.register_on_dignode(function(pos, oldnode, digger)
 	local node = minetest.registered_nodes[oldnode.name]
 	-- if the no_particles group is set dont add particles
-	if node == nil or node.groups.no_particles then
+	if not node or node.groups.no_particles or not digger then
 		return
 	end
 	-- try to get the textures from the dig_result instead of the digged node
@@ -72,10 +72,10 @@ minetest.register_on_dignode(function(pos, oldnode, digger)
 		local dx = (math.random(0,10)-5)/10
 		local dy = (math.random(0,10)-5)/10
 		local dz = (math.random(0,10)-5)/10
-		
+
 		-- spawn at random position in the node
 		local obj = minetest.env:add_entity({x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}, "particles:particle")
-		
+
 		-- set the textures
 		local textures = {}
 		local max = 1
