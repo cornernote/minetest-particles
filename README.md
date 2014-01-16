@@ -30,4 +30,4 @@ PilzAdam - made it work for any item without being defined in a mod, also improv
 
 ## License
 
-[BSD-3-Clause](https://raw.github.com/cornernote/minetest-armor/master/LICENSE), Copyright © 2013-2014 [Brett O'Donnell](http://cornernote.github.io/)
+[BSD-3-Clause](https://raw.github.com/cornernote/minetest-particles/master/LICENSE), Copyright © 2013-2014 [Brett O'Donnell](http://cornernote.github.io/)
