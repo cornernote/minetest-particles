@@ -1,52 +1,33 @@
-----------------------------------
-Particles for Minetest
-----------------------------------
+# Particles for Minetest
 
-Copyright (c) 2012 cornernote, Brett O'Donnell <cornernote@gmail.com>
-Source Code: https://github.com/cornernote/minetest-particles
-Home Page: https://sites.google.com/site/cornernote/minetest/particles
+Generates particles in the world when you dig blocks, smoke, etc.
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+## Features
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+- Creates 3D textured particles after digging nodes. The particles scatter in random directions and bounce a little when they hit the ground.
+- Creates smoke on torches and other burning items.
+- Creates signal bubbles on mesecon ON signals.
 
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+## Resources
 
+- **[Documentation](http://cornernote.github.io/minetest-particles)**
+- **[GitHub Project](https://github.com/cornernote/minetest-particles)**
+- **[Minetest Forum](http://minetest.net/forum/viewtopic.php?id=3082)**
 
-----------------------------------
-Description
-----------------------------------
+## Support
 
-Creates 3D textured particles that scatter in random directions after digging nodes. 
+- Does this README need improvement?  Go ahead and [suggest a change](https://github.com/cornernote/minetest-particles/edit/master/README.md).
+- Found a bug, or need help using this project?  Check the [open issues](https://github.com/cornernote/minetest-particles/issues) or [create an issue](https://github.com/cornernote/minetest-particles/issues/new).
 
+## About
 
-----------------------------------
-Modders Guide
-----------------------------------
+This module is open source, so it's distributed freely. If you find it useful then I ask not for your wealth, but simply to spare your time to consider the world we share by watching [Earthlings](http://earthlings.com/), a multi-award winning film available to watch online for free. A must-see for anyone who wishes to make the world a better place.
 
-No Dig Particles:
+## Credits
 
-Add no_particles=1 to the groups in the node definition.
+sfan5 - coded the original particles mod which I borrowed and made into this one.
+PilzAdam - made it work for any item without being defined in a mod, also improved the code.
 
-EG:
-minetest.register_node("your_mod:your_item", {
-	description = "Your Item",
-	groups = {no_particles=1},
-})
+## License
 
-Smoke Particles and Signal Bubbles:
-
-Add smokes=1 or signalbubbles=1 to the groups in the node definition.
-
-EG:
-minetest.register_node("your_mod:your_item", {
-	description = "Your Item",
-	groups = {smokes=1},
-})
-
-
-----------------------------------
-Credits
-----------------------------------
-
-sfan5 - coded the original particles mod which i stole and made into this one - http://minetest.net/forum/viewtopic.php?id=1129
+[BSD-3-Clause](https://raw.github.com/cornernote/minetest-armor/master/LICENSE), Copyright © 2013-2014 [Brett O'Donnell](http://cornernote.github.io/)
