@@ -12,7 +12,7 @@ Generates particles in the world when you dig blocks, smoke, etc.
 
 - **[Documentation](http://cornernote.github.io/minetest-particles)**
 - **[GitHub Project](https://github.com/cornernote/minetest-particles)**
-- **[Minetest Forum](http://minetest.net/forum/viewtopic.php?id=3082)**
+- **[Minetest Forum](https://forum.minetest.net/viewtopic.php?id=3082)**
 
 ## Support
 
