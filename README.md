@@ -2,6 +2,10 @@
 
 Generates particles in the world when you dig blocks, smoke, etc.
 
+## PLEASE NOTE
+
+This module is now obsolete as this functionality is now builtin to minetest.
+
 ## Features
 
 - Creates 3D textured particles after digging nodes. The particles scatter in random directions and bounce a little when they hit the ground.
